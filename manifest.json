@@ -1,0 +1,11 @@
+{
+  "$schema": "https://smapi.io/schemas/manifest.json",
+  "Name": "Crop Instant Pickup",
+  "Author": "xingxix",
+  "Version": "1.0.0",
+  "Description": "把农作物收获时的掉落物直接放进背包，不再生成满地飞的掉落物。果树可选用 GMCM 开关，原版和模组（如 AFTF）的果树收获都生效。",
+  "UniqueID": "CropInstantPickup",
+  "EntryDll": "CropInstantPickup.dll",
+  "MinimumApiVersion": "4.0.0",
+  "MinimumGameVersion": "1.6.15"
+}
