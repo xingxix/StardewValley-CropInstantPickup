@@ -20,5 +20,9 @@ public sealed class ModConfig
     public bool InstantTreePickup {get; set;} = false;
     //怪物掉落
     public bool InstantMonsterPickup {get; set;} = false;
+    //灌木类
+    public bool InstantBushPickup {get; set;} = false;
 
+    //FTM
+    public bool InstantFTMPickup {get; set;} = false;
 }

@@ -7,7 +7,7 @@
   "config.instant-mining-pickup.tooltip": "挖矿时掉落物直接进入背包（不包括大石头，陨石，可破坏木箱，它们有单独的选项）",
   "config.instant-weed-pickup.name": "杂草立刻拾取",
   "config.instant-weed-pickup.tooltip": "砍杂草的掉落物直接进入背包",
-  "config.instant-resourceclump-pickup.name": "资源丛立刻拾取（树桩，陨石等）",
+  "config.instant-resourceclump-pickup.name": "资源丛立刻拾取（树桩，陨石，巨大作物等）",
   "config.instant-resourceclump-pickup.tooltip": "破坏资源丛时（如树桩，陨石，大石头这些）掉落物直接进入背包",
   "config.instant-breakablecontainer-pickup.name": "可破坏容器(如矿井里的木桶)",
   "config.instant-breakablecontainer-pickup.tooltip": "破坏可破坏容器时掉落物直接进入背包",
@@ -16,5 +16,9 @@
   "config.instant-tree-pickup.name": "砍树立刻拾取",
   "config.instant-tree-pickup.tooltip": "砍树掉落物直接进入背包",
   "config.instant-monster-pickup.name": "杀怪立刻拾取",
-  "config.instant-monster-pickup.tooltip": "杀怪掉落物直接进入背包"
+  "config.instant-monster-pickup.tooltip": "杀怪掉落物直接进入背包",
+  "config.instant-bush-pickup.name": "灌木丛立刻拾取（黑莓茶苗等）",
+  "config.instant-bush-pickup.tooltip": "摸灌木丛的掉落物直接进入背包",
+  "config.instant-ftm-pickup.name": "farm type manager怪物掉落立即拾取（仅主机）",
+  "config.instant-ftm-pickup.tooltip": "farm type manager中的怪物掉落物（如RSV山脊森林的怪物掉落的灵魂精华）"
 }

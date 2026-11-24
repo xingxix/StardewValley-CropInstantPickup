@@ -2,6 +2,7 @@
 using HarmonyLib;
 using StardewValley;
 using StardewValley.TerrainFeatures;
+using StardewValley.Tools;
 
 namespace CropInstantPickup;
 [HarmonyPatch(typeof(Tree), nameof(Tree.tickUpdate))]
@@ -39,4 +40,87 @@ internal static class TreeChoppingPatch
         }    
         DebrisSweep.CollectNew(__instance.Location, t?.getLastFarmerToUse(), __state);
     }
+}
+
+[HarmonyPatch(typeof(FruitTree), nameof(FruitTree.tickUpdate))]
+internal static class FruitTreeTreePatch
+{
+    private static void Prefix(FruitTree __instance, out int __state)
+    {
+        __state = __instance.falling.Value ? __instance.Location?.debris.Count ?? -1 : -1;
+    }
+    private static void Postfix(FruitTree __instance, int __state)
+    {
+        if (!ModEntry.Config.InstantTreePickup ||  __state < 0)
+        {
+            return;
+        }
+        //我的客户端给别人背包加这不扯淡吗
+        //如果这里是被炸了，那么就判断成主机，那就只有主机收喽？如果主机没下这个mod就变成普通掉落物
+        Farmer who = Game1.GetPlayer(__instance.lastPlayerToHit.Value) ?? Game1.MasterPlayer;
+            DebrisSweep.CollectNew(__instance.Location, who, __state);
+    }
+}
+
+[HarmonyPatch(typeof(FruitTree), nameof(FruitTree.performToolAction))]
+internal static class FruitTreeChoppingPatch
+{
+    private static void Prefix(FruitTree __instance, out int __state)
+    {
+        __state = __instance.Location?.debris.Count ?? -1;
+    }
+    private static void Postfix(FruitTree __instance, Tool t, int __state)
+    {
+        if (!ModEntry.Config.InstantTreePickup || __state < 0)
+        {
+           return; 
+        }    
+        DebrisSweep.CollectNew(__instance.Location, t?.getLastFarmerToUse(), __state);
+    }
+}
+
+[HarmonyPatch(typeof(StardewValley.Object), nameof(StardewValley.Object.performToolAction))]
+internal static class TwigPatch
+{
+private static void Prefix(StardewValley.Object __instance, Tool t, out int __state)
+    {
+        __state = -1;
+        if (__instance.IsTwig() && t is Axe)
+        {
+            __state = __instance.Location?.debris.Count ?? -1;
+        }
+
+    }   
+
+private static void Postfix(StardewValley.Object __instance, Tool t, int __state)
+    {
+     if (!ModEntry.Config.InstantTreePickup || __state < 0)
+        {
+            return;
+        }   
+    DebrisSweep.CollectNew(__instance.Location, t?.getLastFarmerToUse(), __state);
+    } 
+}
+
+[HarmonyPatch(typeof(StardewValley.Object), nameof(StardewValley.Object.onExplosion))]
+internal static class TwigOnExplosionPatch
+{
+private static void Prefix(StardewValley.Object __instance, out int __state)
+    {
+        __state = -1;
+        if (__instance.IsTwig())
+        {
+            __state = __instance.Location?.debris.Count ?? -1;
+        }
+
+    }   
+
+private static void Postfix(StardewValley.Object __instance, Farmer who, int __state)
+    {
+     if (!ModEntry.Config.InstantTreePickup || __state < 0)
+        {
+            return;
+        }   
+    DebrisSweep.CollectNew(__instance.Location, who, __state);
+    } 
 }

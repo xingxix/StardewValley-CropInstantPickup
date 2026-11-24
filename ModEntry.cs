@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using HarmonyLib;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -15,10 +17,23 @@ public class ModEntry : Mod
         new Harmony(ModManifest.UniqueID).PatchAll();
 
         helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+        // helper.Events.GameLoop.UpdateTicked += (sender, e) => {};
     }
 
     private void OnGameLaunched(object sender, GameLaunchedEventArgs e)
     {
+         Harmony harmony = new Harmony(ModManifest.UniqueID);
+         Type modEntry = AccessTools.TypeByName("FarmTypeManager.ModEntry");
+        if(modEntry is not null)
+        {
+            MethodInfo target = AccessTools.Method(modEntry, "NpcListChanged");
+            if(target is not null){
+            HarmonyMethod prefix = new HarmonyMethod(typeof(FTMonsterPatch), nameof(FTMonsterPatch.SaveNum));
+            HarmonyMethod postfix = new HarmonyMethod(typeof(FTMonsterPatch), nameof(FTMonsterPatch.CollectThem));
+            harmony.Patch(target, prefix: prefix, postfix: postfix);
+        }
+        }
+
         IGenericModConfigMenuApi api = Helper.ModRegistry.GetApi<IGenericModConfigMenuApi>("spacechase0.GenericModConfigMenu");
         if (api == null)
             return;
@@ -85,6 +100,20 @@ public class ModEntry : Mod
             setValue: value => Config.InstantMonsterPickup = value,
             name: () => Helper.Translation.Get("config.instant-monster-pickup.name"),
             tooltip: () => Helper.Translation.Get("config.instant-monster-pickup.tooltip")
+        );
+        api.AddBoolOption(
+            ModManifest,
+            getValue: () => Config.InstantBushPickup,
+            setValue: value => Config.InstantBushPickup = value,
+            name: () => Helper.Translation.Get("config.instant-bush-pickup.name"),
+            tooltip: () => Helper.Translation.Get("config.instant-bush-pickup.tooltip")
+        );
+        api.AddBoolOption(
+            ModManifest,
+            getValue: () => Config.InstantFTMPickup,
+            setValue: value => Config.InstantFTMPickup = value,
+            name: () => Helper.Translation.Get("config.instant-ftm-pickup.name"),
+            tooltip: () => Helper.Translation.Get("config.instant-ftm-pickup.tooltip")
         );
         api.AddSectionTitle(ModManifest, () => "杂项");
         api.AddBoolOption(

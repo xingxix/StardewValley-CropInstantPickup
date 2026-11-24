@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using StardewValley;
@@ -68,6 +69,8 @@ public static class DebrisSweep
             return;
         }
         who ??= Game1.player; 
+        //player是本地玩家
+        //MasterPlayer是主机玩家
         if(who.currentLocation != gameLocation){return;}
         if(who.UniqueMultiplayerID != Game1.player.UniqueMultiplayerID){return;}
 
@@ -85,6 +88,38 @@ public static class DebrisSweep
             {
                 gameLocation.debris.RemoveAt(i);
                 --i;
+            }
+        }
+    }
+    public static void CollectNew(GameLocation gameLocation, Farmer who, HashSet<Debris> rawDebris, ICollection<Debris> exclude)
+    {
+        if(gameLocation is null || rawDebris is null || exclude is null){
+            return;
+        }
+        who ??= Game1.player; 
+        //player是本地玩家
+        //MasterPlayer是主机玩家
+        if(who.currentLocation != gameLocation){return;}
+        if(who.UniqueMultiplayerID != Game1.player.UniqueMultiplayerID){return;}
+
+        //下面才有修改 x 2
+        //原来是index是state按下标往后找
+        //下标是个谎言.jpg
+        //他用Debris当键的话，存的是实例不是某种物品，所以不会重，那遍历吧
+        //别忘了itemId不会空，他一定会被创建，但value会赋空值
+        for(int i = gameLocation.debris.Count - 1; i >= 0; --i)
+        {
+            Debris debris = gameLocation.debris[i];
+            if(rawDebris.Contains(debris)){break;}
+            if (debris.item == null && String.IsNullOrEmpty(debris.itemId.Value)){continue;}
+            if(exclude.Remove(debris)){continue;}
+            while(debris.Chunks.Count > 0 && debris.collect(who))
+            {
+                debris.Chunks.RemoveAt(0);
+            }
+            if(debris.Chunks.Count == 0)
+            {
+                gameLocation.debris.RemoveAt(i);
             }
         }
     }

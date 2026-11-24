@@ -1,5 +1,6 @@
 using HarmonyLib;
 using StardewValley;
+using StardewValley.Tools;
 
 namespace CropInstantPickup;
 [HarmonyPatch(typeof(StardewValley.Object), nameof(StardewValley.Object.performToolAction))]
@@ -12,6 +13,7 @@ private static void Prefix(StardewValley.Object __instance, Tool t, out int __st
         {
             __state = __instance.Location?.debris.Count ?? -1;
         }
+
     }   
 
 private static void Postfix(StardewValley.Object __instance, Tool t, int __state)
@@ -20,7 +22,7 @@ private static void Postfix(StardewValley.Object __instance, Tool t, int __state
         {
             return;
         }   
-    DebrisSweep.CollectNew(__instance.Location, t.getLastFarmerToUse(), __state);
+    DebrisSweep.CollectNew(__instance.Location, t?.getLastFarmerToUse(), __state);
     } 
 }
 
